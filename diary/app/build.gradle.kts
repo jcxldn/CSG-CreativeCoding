@@ -1,7 +1,9 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     id("application")
     id("java")
+    id("com.gradleup.shadow") version "8.3.5"
 }
 
 group = "cc.diary"
@@ -15,7 +17,11 @@ repositories {
 }
 
 dependencies {
+    compileOnly("org.projectlombok:lombok:1.18.34")
+    annotationProcessor("org.projectlombok:lombok:1.18.34")
+
     implementation("org.processing:core:4.3.1")
+    implementation("com.opencsv:opencsv:5.9")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -25,6 +31,31 @@ java {
     }
 }
 
+
 application {
     mainClass = "cc.diary.Main"
+}
+
+// Set main class in MANIFEST.MF so we can do java -jar bleh.jar
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = application.mainClass
+    }
+}
+
+tasks.withType<ShadowJar> {
+    // remove -all suffix
+    archiveClassifier.set("")
+
+    // set shadow'd jar filename
+    archiveBaseName.set("jc-cc-diary")
+    
+    // Enable relocation to (pkg).libs
+    isEnableRelocation = true
+    relocationPrefix = "${project.group}.libs"
+
+    // Configure relocation
+    dependencies {
+        include(dependency("org.processing:.*:.*"))
+    }
 }
