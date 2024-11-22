@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class Datastore {
-    private final String HEART_RATE_CSV_FILENAME = "daily_heart_rate_jc.csv";
+    private static final String HEART_RATE_CSV_FILENAME = "daily_heart_rate_jc.csv";
 
     private CsvProvider<HeartRateRecordBean> hrProvider;
 
