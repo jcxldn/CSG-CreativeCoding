@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import cc.diary.sketch.collision.RectangularBoundingBox;
 import lombok.experimental.SuperBuilder;
+import processing.core.PConstants;
 import processing.core.PVector;
 
 @SuperBuilder
@@ -22,7 +23,7 @@ public class BoundedText extends Element {
     // Make own function so size can be updated every time it's called
     // eg. if we change text size after setup runs
     private PVector getSize() {
-        return new PVector(root.textWidth(getMessage()), root.g.textSize);
+        return new PVector(getRoot().textWidth(getMessage()), getRoot().g.textSize);
     }
 
     // executeSetup not required as there is a default impl in Element.
@@ -34,11 +35,13 @@ public class BoundedText extends Element {
         bounds = new RectangularBoundingBox(coords, size);
 
         // Testing purposes, draw bounding box
-        bounds.draw(root);
+        bounds.draw(this);
 
+        getRoot();
+        getRoot();
         // Draw text
-        root.textAlign(root.LEFT, root.TOP);
-        root.text(getMessage(), coords.x, coords.y, coords.z);
+        getRoot().textAlign(PConstants.LEFT, PConstants.TOP);
+        getRoot().text(getMessage(), coords.x, coords.y, coords.z);
     }
 
 }

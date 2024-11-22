@@ -16,7 +16,7 @@ public class YearViewScreen extends Element {
 
     public void executeSetup() {
         yearText = BoundedText.builder()
-                .root(root)
+                .root(getRoot())
                 .text(year)
                 // .coords(new PVector(24, 24))
                 .coords(new PVector(124, 100))
@@ -27,15 +27,15 @@ public class YearViewScreen extends Element {
     }
 
     public void executeDraw() {
-        root.background(255);
+        getRoot().background(255);
 
-        root.textAlign(PConstants.CENTER);
+        getRoot().textAlign(PConstants.CENTER);
 
-        root.fill(0);
+        getRoot().fill(0);
 
         yearText.draw();
 
-        root.textSize(128);
+        getRoot().textSize(128);
 
         // BoundedText yearText = new BoundedText(year, new PVector(24, 24));
         // yearText

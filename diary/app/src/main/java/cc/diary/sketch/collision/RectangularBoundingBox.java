@@ -1,8 +1,8 @@
 package cc.diary.sketch.collision;
 
-import cc.diary.sketch.Diary;
+import cc.diary.sketch.elements.Element;
+import cc.diary.sketch.util.Color;
 import lombok.Getter;
-import processing.core.PGraphics;
 import processing.core.PVector;
 
 public class RectangularBoundingBox extends BoundingBox {
@@ -36,11 +36,13 @@ public class RectangularBoundingBox extends BoundingBox {
         );
     }
 
-    public void draw(Diary root) {
-        root.stroke(255, 0, 0);
-        root.noFill();
-        // Rect takes (min) x,y as well as width(x) and height (not max x,y!!)
-        root.rect(getMin().x, getMin().y, getSize().x, getSize().y);
+    public void draw(Element element) {
+        element.withStroke(new Color(255, 0, 0), () -> {
+            element.withFill(false, null, () -> {
+                // Rect takes (min) x,y as well as width(x) and height (not max x,y!!)
+                element.getRoot().rect(getMin().x, getMin().y, getSize().x, getSize().y);
+            });
+        });
     }
 
 }
