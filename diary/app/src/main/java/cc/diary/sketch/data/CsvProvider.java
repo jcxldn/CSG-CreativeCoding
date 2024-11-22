@@ -2,6 +2,8 @@ package cc.diary.sketch.data;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,20 +26,18 @@ public class CsvProvider<T extends RecordBean> {
     }
 
     public boolean load() {
-        try {
-            Path path = Paths.get(ClassLoader.getSystemResource(filename).toURI());
-            FileReader reader = new FileReader(path.toFile());
+        InputStream stream = ClassLoader.getSystemResourceAsStream(filename);
 
-            this.data = new CsvToBeanBuilder<T>(reader)
-                    .withType(cls)
-                    .build()
-                    .parse();
+        if (stream == null)
+            return false;
 
-            return true;
+        InputStreamReader reader = new InputStreamReader(stream);
 
-        } catch (FileNotFoundException | URISyntaxException e) {
+        this.data = new CsvToBeanBuilder<T>(reader)
+                .withType(cls)
+                .build()
+                .parse();
 
-            return false; // file not found or could not
-        }
+        return true;
     }
 }

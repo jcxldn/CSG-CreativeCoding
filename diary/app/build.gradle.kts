@@ -53,9 +53,4 @@ tasks.withType<ShadowJar> {
     // Enable relocation to (pkg).libs
     isEnableRelocation = true
     relocationPrefix = "${project.group}.libs"
-
-    // Configure relocation
-    dependencies {
-        include(dependency("org.processing:.*:.*"))
-    }
 }
