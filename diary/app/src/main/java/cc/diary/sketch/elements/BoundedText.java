@@ -3,6 +3,7 @@ package cc.diary.sketch.elements;
 import java.io.Serializable;
 
 import cc.diary.sketch.collision.RectangularBoundingBox;
+import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import processing.core.PConstants;
 import processing.core.PVector;
@@ -14,7 +15,7 @@ public class BoundedText extends Element {
     private PVector coords;
 
     // Updated after each draw call
-    private RectangularBoundingBox bounds;
+    private @Getter RectangularBoundingBox bounds;
 
     private String getMessage() {
         return text.toString();
@@ -26,19 +27,25 @@ public class BoundedText extends Element {
         return new PVector(getRoot().textWidth(getMessage()), getRoot().g.textSize);
     }
 
+    private void updateBounds() {
+        PVector size = getSize();
+        bounds = new RectangularBoundingBox(coords, size);
+
+    }
+
     // executeSetup not required as there is a default impl in Element.
+    public void executeSetup() {
+        updateBounds(); // make bounds available before first draw
+    }
 
     public void executeDraw() {
 
         // Update bounds
-        PVector size = getSize();
-        bounds = new RectangularBoundingBox(coords, size);
+        updateBounds();
 
         // Testing purposes, draw bounding box
         bounds.draw(this);
 
-        getRoot();
-        getRoot();
         // Draw text
         getRoot().textAlign(PConstants.LEFT, PConstants.TOP);
         getRoot().text(getMessage(), coords.x, coords.y, coords.z);
