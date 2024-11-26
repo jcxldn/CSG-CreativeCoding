@@ -2,8 +2,7 @@ package cc.diary.sketch.elements;
 
 import java.util.function.BiConsumer;
 
-import javax.annotation.processing.Generated;
-
+import cc.diary.sketch.collision.CircularBoundingBox;
 import cc.diary.sketch.collision.RectangularBoundingBox;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
@@ -45,8 +44,8 @@ public class DotGrid extends Element {
                 double x = Math.floor(floatX);
                 double y = Math.floor(floatY);
 
-                // Determine size of elements
-                double elementSize = Math.max((size.x / x), (size.y / y));
+                // Determine size of elements (use Math.min so we can't go off-screen)
+                double elementSize = Math.min((size.x / x), (size.y / y));
 
                 // Done! set variables
                 // -1 for x since we are using dots and having to shift them by 0.5x elementSize
@@ -94,7 +93,9 @@ public class DotGrid extends Element {
         boundingBox.draw(this);
 
         forEachElement((position, size) -> {
+            CircularBoundingBox circleBounds = new CircularBoundingBox(new PVector(position.x, position.y), size);
             getRoot().circle(position.x, position.y, size);
+            circleBounds.draw(this);
         });
     }
 }

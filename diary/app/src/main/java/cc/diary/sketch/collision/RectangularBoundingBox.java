@@ -37,7 +37,7 @@ public class RectangularBoundingBox extends BoundingBox {
     }
 
     public void draw(Element element) {
-        element.withStroke(new Color(255, 0, 0), () -> {
+        element.withStroke(this.outlineColor, () -> {
             element.withFill(false, null, () -> {
                 // Rect takes (min) x,y as well as width(x) and height (not max x,y!!)
                 element.getRoot().rect(getMin().x, getMin().y, getSize().x, getSize().y);
