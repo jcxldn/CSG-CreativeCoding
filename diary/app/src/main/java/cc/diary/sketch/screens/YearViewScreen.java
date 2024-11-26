@@ -37,6 +37,7 @@ public class YearViewScreen extends Element {
         yearText = BoundedText.builder()
                 .root(getRoot())
                 .text(String.format("%d (%d/365 days collected)", year, hrChosenYear.size()))
+                .textSize(textSize)
                 // .coords(new PVector(24, 24))
                 .coords(new PVector(0, 0))
                 .build();

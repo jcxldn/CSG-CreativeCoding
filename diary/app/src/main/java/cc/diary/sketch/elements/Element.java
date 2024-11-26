@@ -83,4 +83,15 @@ public class Element {
             root.noFill();
         }
     }
+
+    public void withTextSize(float size, Runnable action) {
+        // Make a record of current textsize;
+        float previousSize = root.g.textSize;
+
+        root.textSize(size);
+
+        action.run();
+
+        root.textSize(previousSize);
+    }
 }

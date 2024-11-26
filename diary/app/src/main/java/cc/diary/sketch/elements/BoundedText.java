@@ -13,6 +13,7 @@ public class BoundedText extends Element {
     // Set via superBuilder
     private Serializable text;
     private PVector coords;
+    private float textSize;
 
     // Updated after each draw call
     private @Getter RectangularBoundingBox bounds;
@@ -24,7 +25,12 @@ public class BoundedText extends Element {
     // Make own function so size can be updated every time it's called
     // eg. if we change text size after setup runs
     private PVector getSize() {
-        return new PVector(getRoot().textWidth(getMessage()), getRoot().g.textSize);
+        // Bit of hack to get around local var used in lambda
+        PVector size[] = new PVector[1];
+        withTextSize(textSize, () -> {
+            size[0] = new PVector(getRoot().textWidth(getMessage()), textSize);
+        });
+        return size[0];
     }
 
     private void updateBounds() {
@@ -47,8 +53,10 @@ public class BoundedText extends Element {
         bounds.draw(this);
 
         // Draw text
-        getRoot().textAlign(PConstants.LEFT, PConstants.TOP);
-        getRoot().text(getMessage(), coords.x, coords.y, coords.z);
+        withTextSize(textSize, () -> {
+            getRoot().textAlign(PConstants.LEFT, PConstants.TOP);
+            getRoot().text(getMessage(), coords.x, coords.y, coords.z);
+        });
     }
 
 }
