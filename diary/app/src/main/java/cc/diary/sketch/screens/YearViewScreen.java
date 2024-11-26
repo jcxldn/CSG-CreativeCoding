@@ -32,6 +32,8 @@ public class YearViewScreen extends Element {
         // Get all (chosen year) data
         hrChosenYear = data.hrFilter((item) -> item.getLocalDateTime().getYear() == year);
 
+        System.out.printf("[%s]: Using year %d (%d entries)\r\n", getClass().getName(), year, hrChosenYear.size());
+
         yearText = BoundedText.builder()
                 .root(getRoot())
                 .text(String.format("%d (%d/365 days collected)", year, hrChosenYear.size()))
