@@ -108,6 +108,7 @@ public class DotGrid extends Element {
                 textArr[index] = BoundedText.builder()
                         .root(getRoot())
                         .text("123")
+                        .centred(true)
                         .maxBounds(rectSizeVector)
                         .coords(rectCoordsVector)
                         .build();

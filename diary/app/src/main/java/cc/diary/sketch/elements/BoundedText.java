@@ -12,7 +12,6 @@ import processing.core.PVector;
 @SuperBuilder
 public class BoundedText extends AbstractText {
     private static final float TEXT_SIZE_INCREMENT = 1;
-    private PVector maxBounds;
 
     // Text last time we calculated size
     private Serializable cachedText;

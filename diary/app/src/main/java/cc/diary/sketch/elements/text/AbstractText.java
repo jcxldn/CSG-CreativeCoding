@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import cc.diary.sketch.collision.RectangularBoundingBox;
 import cc.diary.sketch.elements.Element;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import processing.core.PConstants;
@@ -12,8 +13,11 @@ import processing.core.PVector;
 @SuperBuilder
 public abstract class AbstractText extends Element {
     // Set via SuperBuilder
+    @Builder.Default
+    private boolean centred = false;
     protected Serializable text;
     protected PVector coords;
+    protected PVector maxBounds;
 
     // Updated after each draw call
     protected @Getter RectangularBoundingBox bounds;
@@ -25,7 +29,8 @@ public abstract class AbstractText extends Element {
     protected abstract PVector getSize();
 
     private void updateBounds() {
-        PVector size = getSize();
+        // If centred, use maxBounds as size otherwise use real size.
+        PVector size = (centred) ? maxBounds : getSize();
         bounds = new RectangularBoundingBox(coords, size);
 
     }
@@ -37,9 +42,17 @@ public abstract class AbstractText extends Element {
     public void executeDraw() {
         updateBounds();
 
+        PVector finalCoords = coords.copy();
+
         withTextSize(getSize().y, () -> {
-            getRoot().textAlign(PConstants.LEFT, PConstants.TOP);
-            getRoot().text(getMessage(), coords.x, coords.y, coords.z);
+            if (centred) {
+                getRoot().textAlign(PConstants.CENTER, PConstants.CENTER);
+                finalCoords.add(maxBounds.x / 2, maxBounds.y / 2);
+
+            } else {
+                getRoot().textAlign(PConstants.LEFT, PConstants.TOP);
+            }
+            getRoot().text(getMessage(), finalCoords.x, finalCoords.y, finalCoords.z);
         });
 
         bounds.draw(this);
