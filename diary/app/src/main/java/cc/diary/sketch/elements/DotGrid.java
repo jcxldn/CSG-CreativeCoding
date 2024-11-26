@@ -2,11 +2,14 @@ package cc.diary.sketch.elements;
 
 import java.util.function.BiConsumer;
 
+import org.apache.commons.lang3.function.TriConsumer;
+
 import cc.diary.sketch.collision.CircularBoundingBox;
 import cc.diary.sketch.collision.RectangularBoundingBox;
 import cc.diary.sketch.util.Color;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
+import processing.core.PApplet;
 import processing.core.PVector;
 
 @SuperBuilder
@@ -22,6 +25,9 @@ public class DotGrid extends Element {
     private @Getter PVector gridSize;
     private @Getter int elementSize;
     private RectangularBoundingBox boundingBox;
+
+    // caching
+    private BoundedText[] textArr;
 
     // Determine grid size given bounds and desired elements
     private void determineSize() {
@@ -50,7 +56,7 @@ public class DotGrid extends Element {
         this.elementSize = (int) elementSize;
     }
 
-    private void forEachElement(BiConsumer<PVector, Integer> action) {
+    private void forEachElement(TriConsumer<Integer, PVector, Integer> action) {
         int xSize = (int) getGridSize().x;
         for (int index = 0; index < desiredElements; index++) {
             // Determine x, y position in grid
@@ -61,7 +67,7 @@ public class DotGrid extends Element {
                     coords.x + ((xIndex * getElementSize()) + (getElementSize() / 2)),
                     coords.y + ((yIndex * getElementSize()) + (getElementSize() / 2)));
 
-            action.accept(position, getElementSize());
+            action.accept(index, position, getElementSize());
         }
     }
 
@@ -74,6 +80,8 @@ public class DotGrid extends Element {
         // Size was set
         determineSize();
 
+        textArr = new BoundedText[desiredElements];
+
         // Create bounding box
         boundingBox = new RectangularBoundingBox(coords, size);
 
@@ -82,7 +90,7 @@ public class DotGrid extends Element {
     public void executeDraw() {
         boundingBox.draw(this);
 
-        forEachElement((position, size) -> {
+        forEachElement((index, position, size) -> {
             CircularBoundingBox circleBounds = new CircularBoundingBox(new PVector(position.x, position.y), size);
             getRoot().circle(position.x, position.y, size);
             circleBounds.draw(this);
@@ -91,37 +99,28 @@ public class DotGrid extends Element {
             int rectSize = (int) Math.floor((getElementSize() / 2) * Math.sqrt(2));
             // top left coords of rect
             PVector rectCoordsVector = new PVector(
-                    position.x - (getElementSize() / 2),
-                    position.y - (getElementSize() / 2));
+                    position.x - (rectSize / 2),
+                    position.y - (rectSize / 2));
             PVector rectSizeVector = new PVector(rectSize, rectSize);
 
-            int offset = (int) Math.floor(Math.sqrt(getElementSize()));
+            // if boundedText entry not cached, create and store in "cache" array
+            if (textArr[index] == null) {
+                textArr[index] = BoundedText.builder()
+                        .root(getRoot())
+                        .text("123")
+                        .maxBounds(rectSizeVector)
+                        .coords(rectCoordsVector)
+                        .build();
+            }
 
-            // square text BB
-            RectangularBoundingBox textBounds = new RectangularBoundingBox(rectCoordsVector.add(offset, offset),
-                    rectSizeVector);
-
-            /**
-             * Text text = Text.builder()
-             * .root(getRoot())
-             * .text("132")
-             * .textSize(rectSize)
-             * .coords(rectCoordsVector)
-             * .build();
-             * text.setup();
-             */
-
-            BoundedText bt = BoundedText.builder()
-                    .root(getRoot())
-                    .text("123")
-                    .maxBounds(rectSizeVector)
-                    .coords(rectCoordsVector)
-                    .build();
-
+            // Draw from cache array
             withFill(true, new Color(0, 0, 0), () -> {
-                bt.draw();
+                textArr[index].draw();
             });
 
+            // Rect bounding box for testing
+            // RectangularBoundingBox textBounds = new
+            // RectangularBoundingBox(rectCoordsVector, rectSizeVector);
             // textBounds.draw(this);
         });
     }
