@@ -24,40 +24,29 @@ public class DotGrid extends Element {
 
     // Determine grid size given bounds and desired elements
     private void determineSize() {
-        int elementNum = 0;
+        float xToYRatio = Math.max(size.x, size.y) / Math.min(size.x, size.y);
 
-        boolean done = false;
+        int x = (int) Math.ceil(Math.sqrt(desiredElements) * xToYRatio);
+        // round up integer division <https://stackoverflow.com/a/17149572>
+        int y = (int) Math.ceil((double) desiredElements / x);
 
-        while (!done) {
-            elementNum += 1;
+        // Determine size of elements (use Math.min so we can't go off-screen)
+        double elementSize = Math.min((size.x / x), (size.y / y));
 
-            // Determine bounds (as if a square)
-            double squareBoundsX = Math.floor(Math.sqrt(elementNum));
-            double squareBoundsY = Math.floor(elementNum / squareBoundsX);
-
-            if ((squareBoundsX * squareBoundsY) >= desiredElements) {
-                // Div by square to get bounds that suit our size
-                double floatX = size.x / squareBoundsX;
-                double floatY = size.y / squareBoundsY;
-
-                // Round down to nearest number
-                double x = Math.floor(floatX);
-                double y = Math.floor(floatY);
-
-                // Determine size of elements (use Math.min so we can't go off-screen)
-                double elementSize = Math.min((size.x / x), (size.y / y));
-
-                // Done! set variables
-                // -1 for x since we are using dots and having to shift them by 0.5x elementSize
-                // when drawing
-                // so without this -1 we end up with an extra dot every row (as we lose 2x.5 (1)
-                // dot when we shift)
-                this.gridSize = new PVector((int) x - 1, (int) y);
-                this.elementSize = (int) elementSize;
-
-                done = true;
-            }
+        // Sanity check
+        if (x * y < desiredElements) {
+            System.out.printf("[%s]: number of elements for size [%d, %d] (%d) less than desired %d\r\n",
+                    getClass().getName(), x, y, x * y, desiredElements);
+            System.exit(3);
         }
+
+        System.out.printf(
+                "[%s]: area [%d, %d] used to create grid of size [%d, %d] (%d elements) to fit requested %d elements\r\n",
+                getClass().getName(), (int) size.x, (int) size.y, x, y, x * y, desiredElements);
+
+        // Set variables
+        this.gridSize = new PVector(x, y);
+        this.elementSize = (int) elementSize;
     }
 
     private void forEachElement(BiConsumer<PVector, Integer> action) {
