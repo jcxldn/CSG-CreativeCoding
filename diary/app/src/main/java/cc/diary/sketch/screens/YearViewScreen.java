@@ -6,7 +6,7 @@ import java.util.List;
 import cc.diary.sketch.collision.RectangularBoundingBox;
 import cc.diary.sketch.data.Datastore;
 import cc.diary.sketch.data.HeartRateRecordBean;
-import cc.diary.sketch.elements.BoundedText;
+import cc.diary.sketch.elements.Text;
 import cc.diary.sketch.elements.DotGrid;
 import cc.diary.sketch.elements.Element;
 import lombok.Getter;
@@ -25,7 +25,7 @@ public class YearViewScreen extends Element {
 
     private final float textSize = 24;
 
-    private BoundedText yearText;
+    private Text yearText;
     private DotGrid dots;
 
     public void executeSetup() {
@@ -34,7 +34,7 @@ public class YearViewScreen extends Element {
 
         System.out.printf("[%s]: Using year %d (%d entries)\r\n", getClass().getName(), year, hrChosenYear.size());
 
-        yearText = BoundedText.builder()
+        yearText = Text.builder()
                 .root(getRoot())
                 .text(String.format("%d (%d/365 days collected)", year, hrChosenYear.size()))
                 .textSize(textSize)

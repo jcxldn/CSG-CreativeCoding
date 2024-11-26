@@ -8,8 +8,11 @@ import lombok.experimental.SuperBuilder;
 import processing.core.PConstants;
 import processing.core.PVector;
 
+/**
+ * Text (with an optional BoundingBox)
+ */
 @SuperBuilder
-public class BoundedText extends Element {
+public class Text extends Element {
     // Set via superBuilder
     private Serializable text;
     private PVector coords;
