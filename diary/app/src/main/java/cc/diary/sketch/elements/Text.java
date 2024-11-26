@@ -3,6 +3,7 @@ package cc.diary.sketch.elements;
 import java.io.Serializable;
 
 import cc.diary.sketch.collision.RectangularBoundingBox;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import processing.core.PConstants;
@@ -11,12 +12,17 @@ import processing.core.PVector;
 /**
  * Text (with an optional BoundingBox)
  */
+// TODO: make Text part of AbstractText
 @SuperBuilder
 public class Text extends Element {
     // Set via superBuilder
     private Serializable text;
     private PVector coords;
     private float textSize;
+
+    // TODO: rectangular bounding box does not work if these are changed (see Stats)
+    private @Builder.Default int xAlign = PConstants.LEFT;
+    private @Builder.Default int yAlign = PConstants.TOP;
 
     // Updated after each draw call
     private @Getter RectangularBoundingBox bounds;
@@ -57,7 +63,7 @@ public class Text extends Element {
 
         // Draw text
         withTextSize(textSize, () -> {
-            getRoot().textAlign(PConstants.LEFT, PConstants.TOP);
+            getRoot().textAlign(xAlign, yAlign);
             getRoot().text(getMessage(), coords.x, coords.y, coords.z);
         });
     }
