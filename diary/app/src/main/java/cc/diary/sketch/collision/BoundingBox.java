@@ -5,7 +5,7 @@ import cc.diary.sketch.util.Color;
 import processing.core.PVector;
 
 public abstract class BoundingBox {
-    protected Color outlineColor = new Color(255, 0, 0);
+    protected static final Color OUTLINE_COLOR = new Color(255, 0, 0);
 
     public abstract boolean contains(PVector other);
 
