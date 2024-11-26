@@ -4,6 +4,7 @@ import java.util.function.BiConsumer;
 
 import cc.diary.sketch.collision.CircularBoundingBox;
 import cc.diary.sketch.collision.RectangularBoundingBox;
+import cc.diary.sketch.util.Color;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import processing.core.PVector;
@@ -100,7 +101,28 @@ public class DotGrid extends Element {
             RectangularBoundingBox textBounds = new RectangularBoundingBox(rectCoordsVector.add(offset, offset),
                     rectSizeVector);
 
-            textBounds.draw(this);
+            /**
+             * Text text = Text.builder()
+             * .root(getRoot())
+             * .text("132")
+             * .textSize(rectSize)
+             * .coords(rectCoordsVector)
+             * .build();
+             * text.setup();
+             */
+
+            BoundedText bt = BoundedText.builder()
+                    .root(getRoot())
+                    .text("123")
+                    .maxBounds(rectSizeVector)
+                    .coords(rectCoordsVector)
+                    .build();
+
+            withFill(true, new Color(0, 0, 0), () -> {
+                bt.draw();
+            });
+
+            // textBounds.draw(this);
         });
     }
 }
