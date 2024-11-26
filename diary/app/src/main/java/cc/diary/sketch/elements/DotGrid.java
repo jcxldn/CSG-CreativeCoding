@@ -91,10 +91,10 @@ public class DotGrid extends Element {
     }
 
     public void executeDraw() {
+        boundingBox.draw(this);
+
         forEachElement((position, size) -> {
             getRoot().circle(position.x, position.y, size);
         });
-
-        boundingBox.draw(this);
     }
 }
