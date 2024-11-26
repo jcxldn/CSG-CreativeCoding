@@ -85,6 +85,22 @@ public class DotGrid extends Element {
             CircularBoundingBox circleBounds = new CircularBoundingBox(new PVector(position.x, position.y), size);
             getRoot().circle(position.x, position.y, size);
             circleBounds.draw(this);
+
+            // Get the largest (square) bounding box that will fit inside the circle.
+            int rectSize = (int) Math.floor((getElementSize() / 2) * Math.sqrt(2));
+            // top left coords of rect
+            PVector rectCoordsVector = new PVector(
+                    position.x - (getElementSize() / 2),
+                    position.y - (getElementSize() / 2));
+            PVector rectSizeVector = new PVector(rectSize, rectSize);
+
+            int offset = (int) Math.floor(Math.sqrt(getElementSize()));
+
+            // square text BB
+            RectangularBoundingBox textBounds = new RectangularBoundingBox(rectCoordsVector.add(offset, offset),
+                    rectSizeVector);
+
+            textBounds.draw(this);
         });
     }
 }
