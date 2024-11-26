@@ -2,6 +2,9 @@ package cc.diary.sketch.data;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class Datastore {
     private static final String HEART_RATE_CSV_FILENAME = "daily_heart_rate_jc.csv";
@@ -24,5 +27,11 @@ public class Datastore {
         for (HeartRateRecordBean entry : (List<HeartRateRecordBean>) hrProvider.getData()) {
             action.accept(entry);
         }
+    }
+
+    public List<HeartRateRecordBean> hrFilter(Predicate<HeartRateRecordBean> filter) {
+        // https://stackoverflow.com/a/13140130
+        // search java list
+        return hrProvider.getData().stream().filter(filter).collect(Collectors.toList());
     }
 }

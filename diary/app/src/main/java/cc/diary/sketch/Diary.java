@@ -21,7 +21,7 @@ public class Diary extends PApplet {
     public void setup() {
         data = new Datastore();
 
-        yvs = YearViewScreen.builder().root(this).year(2024).build();
+        yvs = YearViewScreen.builder().root(this).data(data).year(2024).build();
         yvs.setup();
         // yvs.setRoot(this);
 
