@@ -19,12 +19,14 @@ public class CircularBoundingBox extends BoundingBox {
     }
 
     @Override
-    public void draw(Element element) {
-        element.withStroke(BoundingBox.OUTLINE_COLOR, () -> {
-            element.withFill(false, null, () -> {
-                element.getRoot().circle(coords.x, coords.y, diameter);
+    public void drawIfEnabled(Element element) {
+        if (element.getRoot().isDisplayBoundingBoxes()) {
+            element.withStroke(BoundingBox.OUTLINE_COLOR, () -> {
+                element.withFill(false, null, () -> {
+                    element.getRoot().circle(coords.x, coords.y, diameter);
+                });
             });
-        });
+        }
     }
 
 }

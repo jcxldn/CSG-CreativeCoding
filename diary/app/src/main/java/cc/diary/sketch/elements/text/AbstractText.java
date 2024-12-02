@@ -59,6 +59,6 @@ public abstract class AbstractText extends Element {
             getRoot().text(getMessage(), finalCoords.x, finalCoords.y, finalCoords.z);
         });
 
-        bounds.draw(this);
+        bounds.drawIfEnabled(this);
     }
 }

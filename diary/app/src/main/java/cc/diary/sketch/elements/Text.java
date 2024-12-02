@@ -64,7 +64,7 @@ public class Text extends Element {
         updateBounds();
 
         // Testing purposes, draw bounding box
-        bounds.draw(this);
+        bounds.drawIfEnabled(this);
 
         // Draw text
         withFill(true, new Color(0, 0, 0), () -> {

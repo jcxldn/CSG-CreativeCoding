@@ -36,13 +36,15 @@ public class RectangularBoundingBox extends BoundingBox {
         );
     }
 
-    public void draw(Element element) {
-        element.withStroke(BoundingBox.OUTLINE_COLOR, () -> {
-            element.withFill(false, null, () -> {
-                // Rect takes (min) x,y as well as width(x) and height (not max x,y!!)
-                element.getRoot().rect(getMin().x, getMin().y, getSize().x, getSize().y);
+    public void drawIfEnabled(Element element) {
+        if (element.getRoot().isDisplayBoundingBoxes()) {
+            element.withStroke(BoundingBox.OUTLINE_COLOR, () -> {
+                element.withFill(false, null, () -> {
+                    // Rect takes (min) x,y as well as width(x) and height (not max x,y!!)
+                    element.getRoot().rect(getMin().x, getMin().y, getSize().x, getSize().y);
+                });
             });
-        });
+        }
     }
 
 }

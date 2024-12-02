@@ -1,5 +1,7 @@
 package cc.diary.sketch.elements.core;
 
+import java.util.function.Supplier;
+
 import cc.diary.sketch.Diary;
 import cc.diary.sketch.util.Color;
 import lombok.Builder;
@@ -10,6 +12,8 @@ import lombok.experimental.SuperBuilder;
 public abstract class Element {
     private @Getter Diary root;
     private @Builder.Default @Getter int priority = Integer.MAX_VALUE - 2;
+    // default to always displaying
+    private @Builder.Default @Getter Supplier<Boolean> visibleWhen = () -> true;
 
     // #region Utility functions
 

@@ -94,14 +94,15 @@ public class DotGrid extends Element {
     @ElementHandler(Event.DRAW)
     public void draw() {
 
-        boundingBox.draw(this);
+        boundingBox.drawIfEnabled(this);
 
         forEachElement((index, position, size) -> {
             CircularBoundingBox circleBounds = new CircularBoundingBox(new PVector(position.x, position.y), size);
             withFill(true, new Color(0, 255, 0), () -> {
                 getRoot().circle(position.x, position.y, size);
             });
-            circleBounds.draw(this);
+
+            circleBounds.drawIfEnabled(this);
 
             // Get the largest (square) bounding box that will fit inside the circle.
             int rectSize = (int) Math.floor((getElementSize() / 2) * Math.sqrt(2));

@@ -9,5 +9,5 @@ public abstract class BoundingBox {
 
     public abstract boolean contains(PVector other);
 
-    public abstract void draw(Element element);
+    public abstract void drawIfEnabled(Element element);
 }

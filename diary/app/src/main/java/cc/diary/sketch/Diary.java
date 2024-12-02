@@ -11,6 +11,10 @@ import processing.core.PVector;
 
 public class Diary extends PApplet {
 
+    // default false
+    private @Getter boolean displayBoundingBoxes;
+    private boolean displayFrameTimes;
+
     private Datastore data;
     private @Getter ListenerManager listenerManager;
 
@@ -31,7 +35,11 @@ public class Diary extends PApplet {
         listenerManager.register(yvs);
 
         int statsOffset = 5; // 2 (5 to see bounding box)
-        stats = Stats.builder().root(this).priority(-1).coords(new PVector(width - statsOffset, height - statsOffset))
+        stats = Stats.builder()
+                .root(this)
+                .priority(-1)
+                .visibleWhen(() -> displayFrameTimes)
+                .coords(new PVector(width - statsOffset, height - statsOffset))
                 .build();
         listenerManager.register(stats);
 
@@ -42,6 +50,14 @@ public class Diary extends PApplet {
 
     public void draw() {
         listenerManager.draw();
+    }
+
+    public void keyPressed() {
+        if (key == 'b') {
+            displayBoundingBoxes = !displayBoundingBoxes;
+        } else if (key == 'f') {
+            displayFrameTimes = !displayFrameTimes;
+        }
     }
 
 }

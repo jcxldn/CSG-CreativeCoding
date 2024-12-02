@@ -24,8 +24,10 @@ public class ListenerManager {
                 if (handler.value() == event) {
                     ensureRoot(element, () -> {
                         try {
-                            // execute
-                            method.invoke(element);
+                            // execute if visible
+                            if (element.getVisibleWhen().get())
+                                method.invoke(element);
+
                         } catch (IllegalAccessException | InvocationTargetException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
