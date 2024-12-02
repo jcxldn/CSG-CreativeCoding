@@ -60,8 +60,9 @@ public class BoundedText extends AbstractText {
 
                 cachedText = getMessage();
                 cachedSize = result;
-                System.out.printf("[%s]: Calculated text size (%f,%f) for message '%s'\r\n", getClass().getName(),
-                        cachedSize.x, cachedSize.y, cachedText);
+                // System.out.printf("[%s]: Calculated text size (%f,%f) for message '%s'\r\n",
+                // getClass().getName(),
+                // cachedSize.x, cachedSize.y, cachedText);
 
                 return result;
             } catch (Exception ex) {

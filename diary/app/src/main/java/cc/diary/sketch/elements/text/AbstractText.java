@@ -3,7 +3,9 @@ package cc.diary.sketch.elements.text;
 import java.io.Serializable;
 
 import cc.diary.sketch.collision.RectangularBoundingBox;
-import cc.diary.sketch.elements.Element;
+import cc.diary.sketch.elements.core.Element;
+import cc.diary.sketch.elements.core.ElementHandler;
+import cc.diary.sketch.elements.core.ElementHandler.Event;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
@@ -35,11 +37,13 @@ public abstract class AbstractText extends Element {
 
     }
 
-    public void executeSetup() {
+    @ElementHandler(Event.SETUP)
+    public void setup() {
         updateBounds(); // make bounds available before first draw
     }
 
-    public void executeDraw() {
+    @ElementHandler(Event.DRAW)
+    public void draw() {
         updateBounds();
 
         PVector finalCoords = coords.copy();

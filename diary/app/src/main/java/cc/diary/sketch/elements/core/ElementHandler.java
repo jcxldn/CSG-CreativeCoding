@@ -1,0 +1,18 @@
+package cc.diary.sketch.elements.core;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface ElementHandler {
+    public static enum Event {
+        NONE,
+        SETUP,
+        DRAW
+    }
+
+    public Event value() default Event.NONE;
+}

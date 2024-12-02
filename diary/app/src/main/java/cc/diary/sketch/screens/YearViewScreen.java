@@ -8,11 +8,10 @@ import cc.diary.sketch.data.Datastore;
 import cc.diary.sketch.data.HeartRateRecordBean;
 import cc.diary.sketch.elements.Text;
 import cc.diary.sketch.elements.DotGrid;
-import cc.diary.sketch.elements.Element;
-import lombok.Getter;
-import lombok.Setter;
+import cc.diary.sketch.elements.core.Element;
+import cc.diary.sketch.elements.core.ElementHandler;
+import cc.diary.sketch.elements.core.ElementHandler.Event;
 import lombok.experimental.SuperBuilder;
-import processing.core.PConstants;
 import processing.core.PVector;
 
 @SuperBuilder
@@ -28,7 +27,8 @@ public class YearViewScreen extends Element {
     private Text yearText;
     private DotGrid dots;
 
-    public void executeSetup() {
+    @ElementHandler(Event.SETUP)
+    public void setup() {
         // Get all (chosen year) data
         hrChosenYear = data.hrFilter((item) -> item.getLocalDateTime().getYear() == year);
 
@@ -41,7 +41,8 @@ public class YearViewScreen extends Element {
                 // .coords(new PVector(24, 24))
                 .coords(new PVector(0, 0))
                 .build();
-        yearText.setup();
+
+        getRoot().getListenerManager().register(yearText);
 
         dots = DotGrid.builder()
                 .root(getRoot())
@@ -50,26 +51,15 @@ public class YearViewScreen extends Element {
                 .desiredElements(hrChosenYear.size())
                 .build();
 
-        dots.setup();
+        getRoot().getListenerManager().register(dots);
 
         System.out.printf("[%s]: created DotGrid of %fx%f (size %d)\r\n", this.getClass().getName(),
                 dots.getGridSize().x,
                 dots.getGridSize().y,
                 dots.getElementSize());
 
-        // dots.setup();
-
     }
 
-    public void executeDraw() {
-        getRoot().background(255);
-
-        getRoot().fill(0);
-        getRoot().textSize(textSize);
-        yearText.draw();
-
-        getRoot().fill(0, 255, 0);
-
-        dots.draw();
+    public void draw() {
     }
 }

@@ -1,6 +1,6 @@
 package cc.diary.sketch.collision;
 
-import cc.diary.sketch.elements.Element;
+import cc.diary.sketch.elements.core.Element;
 import cc.diary.sketch.util.Color;
 import lombok.Getter;
 import processing.core.PVector;

@@ -6,6 +6,9 @@ import org.apache.commons.lang3.function.TriConsumer;
 
 import cc.diary.sketch.collision.CircularBoundingBox;
 import cc.diary.sketch.collision.RectangularBoundingBox;
+import cc.diary.sketch.elements.core.Element;
+import cc.diary.sketch.elements.core.ElementHandler;
+import cc.diary.sketch.elements.core.ElementHandler.Event;
 import cc.diary.sketch.util.Color;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
@@ -71,7 +74,8 @@ public class DotGrid extends Element {
         }
     }
 
-    public void executeSetup() {
+    @ElementHandler(Event.SETUP)
+    public void setup() {
         if (size == null) {
             System.out.println("Size not set.");
             System.exit(2);
@@ -87,12 +91,16 @@ public class DotGrid extends Element {
 
     }
 
-    public void executeDraw() {
+    @ElementHandler(Event.DRAW)
+    public void draw() {
+
         boundingBox.draw(this);
 
         forEachElement((index, position, size) -> {
             CircularBoundingBox circleBounds = new CircularBoundingBox(new PVector(position.x, position.y), size);
-            getRoot().circle(position.x, position.y, size);
+            withFill(true, new Color(0, 255, 0), () -> {
+                getRoot().circle(position.x, position.y, size);
+            });
             circleBounds.draw(this);
 
             // Get the largest (square) bounding box that will fit inside the circle.

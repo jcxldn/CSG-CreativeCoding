@@ -3,6 +3,10 @@ package cc.diary.sketch.elements;
 import java.io.Serializable;
 
 import cc.diary.sketch.collision.RectangularBoundingBox;
+import cc.diary.sketch.elements.core.Element;
+import cc.diary.sketch.elements.core.ElementHandler;
+import cc.diary.sketch.elements.core.ElementHandler.Event;
+import cc.diary.sketch.util.Color;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
@@ -48,12 +52,13 @@ public class Text extends Element {
 
     }
 
-    // executeSetup not required as there is a default impl in Element.
-    public void executeSetup() {
+    @ElementHandler(Event.SETUP)
+    public void setup() {
         updateBounds(); // make bounds available before first draw
     }
 
-    public void executeDraw() {
+    @ElementHandler(Event.DRAW)
+    public void draw() {
 
         // Update bounds
         updateBounds();
@@ -62,9 +67,11 @@ public class Text extends Element {
         bounds.draw(this);
 
         // Draw text
-        withTextSize(textSize, () -> {
-            getRoot().textAlign(xAlign, yAlign);
-            getRoot().text(getMessage(), coords.x, coords.y, coords.z);
+        withFill(true, new Color(0, 0, 0), () -> {
+            withTextSize(textSize, () -> {
+                getRoot().textAlign(xAlign, yAlign);
+                getRoot().text(getMessage(), coords.x, coords.y, coords.z);
+            });
         });
     }
 

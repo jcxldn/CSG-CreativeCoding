@@ -1,45 +1,18 @@
-package cc.diary.sketch.elements;
+package cc.diary.sketch.elements.core;
 
 import cc.diary.sketch.Diary;
 import cc.diary.sketch.util.Color;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
-public class Element {
+public abstract class Element {
     private @Getter Diary root;
+    private @Builder.Default @Getter int priority = Integer.MAX_VALUE - 2;
 
-    public Element() {
-    }
+    // #region Utility functions
 
-    // default implementation
-    protected void executeSetup() {
-    }
-
-    // default implementation
-    protected void executeDraw() {
-    };
-
-    private void ensureRoot(Runnable action) {
-        if (Diary.class.isInstance(root)) {
-            action.run();
-        } else {
-            System.out.printf("[%s]: Root not set, did you call setRoot()?", this.getClass().getName());
-            System.exit(2);
-        }
-    }
-
-    public void setup() {
-        ensureRoot(() -> executeSetup());
-    }
-
-    public void draw() {
-        ensureRoot(() -> executeDraw());
-    }
-
-    // Utility functions
-
-    // TODO add optional stroke
     public void withStroke(Color color, Runnable action) {
         // Make a record of the current colorMode and stroke
         int previousColorMode = root.g.colorMode;
@@ -94,4 +67,7 @@ public class Element {
 
         root.textSize(previousSize);
     }
+
+    // #endregion
+
 }

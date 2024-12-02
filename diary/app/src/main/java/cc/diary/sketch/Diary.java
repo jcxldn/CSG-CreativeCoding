@@ -1,16 +1,18 @@
 package cc.diary.sketch;
 
-import java.time.LocalDateTime;
-
 import cc.diary.sketch.data.Datastore;
+import cc.diary.sketch.elements.Clear;
 import cc.diary.sketch.elements.Stats;
+import cc.diary.sketch.elements.core.ListenerManager;
 import cc.diary.sketch.screens.YearViewScreen;
+import lombok.Getter;
 import processing.core.PApplet;
 import processing.core.PVector;
 
 public class Diary extends PApplet {
 
     private Datastore data;
+    private @Getter ListenerManager listenerManager;
 
     private YearViewScreen yvs;
     private Stats stats;
@@ -23,38 +25,23 @@ public class Diary extends PApplet {
 
     public void setup() {
         data = new Datastore();
+        listenerManager = new ListenerManager(this);
 
         yvs = YearViewScreen.builder().root(this).data(data).year(2024).build();
-        yvs.setup();
+        listenerManager.register(yvs);
 
         int statsOffset = 5; // 2 (5 to see bounding box)
-        stats = Stats.builder().root(this).coords(new PVector(width - statsOffset, height - statsOffset)).build();
-        stats.setup();
+        stats = Stats.builder().root(this).priority(-1).coords(new PVector(width - statsOffset, height - statsOffset))
+                .build();
+        listenerManager.register(stats);
 
-        // yvs.setRoot(this);
-
-        /**
-         * data.hrForEach(entry -> {
-         * LocalDateTime ldt = entry.getLocalDateTime();
-         * String date = String.format("%s/%s/%s", ldt.getDayOfMonth(),
-         * ldt.getMonthValue(), ldt.getYear());
-         * println(String.format("[%s]: %d steps", date, entry.getSteps()));
-         * });
-         */
+        Clear clear = Clear.builder().root(this).build();
+        listenerManager.register(clear);
 
     }
 
-    /**
-     * public void draw() {
-     * println("loop");
-     * delay(1000);
-     * }
-     */
-
     public void draw() {
-        yvs.draw();
-        stats.draw();
-
+        listenerManager.draw();
     }
 
 }
