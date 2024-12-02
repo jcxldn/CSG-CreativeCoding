@@ -77,4 +77,8 @@ public class ListenerManager {
         // sort();
         this.elements.forEach(element -> runAllAnnotationsFor(element, ElementHandler.Event.DRAW));
     }
+
+    public void mouseClicked() {
+        this.elements.forEach(element -> runAllAnnotationsFor(element, ElementHandler.Event.MOUSE_CLICKED));
+    }
 }

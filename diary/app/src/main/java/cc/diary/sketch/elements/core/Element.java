@@ -3,10 +3,12 @@ package cc.diary.sketch.elements.core;
 import java.util.function.Supplier;
 
 import cc.diary.sketch.Diary;
+import cc.diary.sketch.collision.BoundingBox;
 import cc.diary.sketch.util.Color;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
+import processing.core.PVector;
 
 @SuperBuilder
 public abstract class Element {
@@ -16,6 +18,10 @@ public abstract class Element {
     private @Builder.Default @Getter Supplier<Boolean> visibleWhen = () -> true;
 
     // #region Utility functions
+
+    public boolean mouseInBounds(BoundingBox bounds) {
+        return bounds.contains(new PVector(getRoot().mouseX, getRoot().mouseY));
+    }
 
     public void withStroke(Color color, Runnable action) {
         // Make a record of the current colorMode and stroke

@@ -31,6 +31,7 @@ public class DotGrid extends Element {
 
     // caching
     private BoundedText[] textArr;
+    private CircularBoundingBox[] dotBounds;
 
     // Determine grid size given bounds and desired elements
     private void determineSize() {
@@ -85,6 +86,11 @@ public class DotGrid extends Element {
         determineSize();
 
         textArr = new BoundedText[desiredElements];
+        dotBounds = new CircularBoundingBox[desiredElements];
+
+        forEachElement((index, position, size) -> {
+            dotBounds[index] = new CircularBoundingBox(new PVector(position.x, position.y), size);
+        });
 
         // Create bounding box
         boundingBox = new RectangularBoundingBox(coords, size);
@@ -97,12 +103,20 @@ public class DotGrid extends Element {
         boundingBox.drawIfEnabled(this);
 
         forEachElement((index, position, size) -> {
-            CircularBoundingBox circleBounds = new CircularBoundingBox(new PVector(position.x, position.y), size);
-            withFill(true, new Color(0, 255, 0), () -> {
+            // Darken circle if under mouse
+            Color color;
+            if (dotBounds[index].contains(new PVector(getRoot().mouseX, getRoot().mouseY))) {
+                color = new Color(0, (255 / 4) * 3, 0);
+            } else {
+                color = new Color(0, 255, 0);
+            }
+
+            // Draw circle with selected color
+            withFill(true, color, () -> {
                 getRoot().circle(position.x, position.y, size);
             });
 
-            circleBounds.drawIfEnabled(this);
+            dotBounds[index].drawIfEnabled(this);
 
             // Get the largest (square) bounding box that will fit inside the circle.
             int rectSize = (int) Math.floor((getElementSize() / 2) * Math.sqrt(2));
@@ -132,6 +146,15 @@ public class DotGrid extends Element {
             // RectangularBoundingBox textBounds = new
             // RectangularBoundingBox(rectCoordsVector, rectSizeVector);
             // textBounds.draw(this);
+        });
+    }
+
+    @ElementHandler(Event.MOUSE_CLICKED)
+    public void onClick() {
+        forEachElement((index, position, size) -> {
+            if (mouseInBounds(dotBounds[index])) {
+                System.out.println(index);
+            }
         });
     }
 }

@@ -60,4 +60,8 @@ public class Diary extends PApplet {
         }
     }
 
+    public void mouseClicked() {
+        listenerManager.mouseClicked();
+    }
+
 }

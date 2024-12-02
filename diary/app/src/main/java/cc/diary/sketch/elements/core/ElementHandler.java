@@ -11,7 +11,8 @@ public @interface ElementHandler {
     public static enum Event {
         NONE,
         SETUP,
-        DRAW
+        DRAW,
+        MOUSE_CLICKED
     }
 
     public Event value() default Event.NONE;
