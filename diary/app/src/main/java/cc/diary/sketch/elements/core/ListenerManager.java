@@ -2,16 +2,17 @@ package cc.diary.sketch.elements.core;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.PriorityQueue;
+import java.util.function.Consumer;
 
 import cc.diary.sketch.Diary;
+import cc.diary.sketch.util.field.Field;
 
 public class ListenerManager {
-    private ArrayList<Element> elements;
+    private PriorityQueue<Element> elements;
 
     public ListenerManager(Diary root) {
-        this.elements = new ArrayList<Element>();
+        this.elements = new PriorityQueue<Element>(1, new ElementComparator());
     }
 
     private void runAllAnnotationsFor(Element element, ElementHandler.Event event) {
@@ -47,14 +48,47 @@ public class ListenerManager {
         }
     }
 
+    // Iterator ((PriorityQueue).forEach) not guaranteed to be in priority order
+    // <https://docs.oracle.com/javase/8/docs/api/java/util/PriorityQueue.html>
+    // we will use poll instead and expose a forEach like method
+    // Returns highest priority item first (lowest getPriority())
+    private void forEach(Consumer<Element> action) {
+        // shallow copy the queue
+        PriorityQueue<Element> clonedQueue = new PriorityQueue<Element>(elements);
+
+        // pop head element until empty (using clone so we keep orig queue)
+        while (!clonedQueue.isEmpty()) {
+            action.accept(clonedQueue.poll());
+        }
+    }
+
+    public void displayPriorities() {
+        // use a field to increment integer value inside consumer action (a lambda?)
+        Field<Integer> index = new Field<Integer>();
+        index.setField(-1);
+
+        forEach(element -> {
+            index.setField(index.getField() + 1); // increment index
+            ElementPriority priority = element.getPriority(); // get priority enum
+
+            // display values
+            System.out.printf("%s\t(order #%d)\t%s\t(%d)\r\n",
+                    String.format(
+                            "%20s",
+                            element.getClass().getSimpleName()),
+                    index.getField(),
+                    priority.name(),
+                    priority.priority);
+        });
+    }
+
     // TODO: implement required annotations
     // private Class[] requiredAnnotations = { Setup.class };
 
     public void register(Element element) {
         ensureRoot(element, () -> {
-            this.elements.add(element);
-            sort();
             runAllAnnotationsFor(element, ElementHandler.Event.SETUP);
+            this.elements.add(element);
         });
     }
 
@@ -63,22 +97,11 @@ public class ListenerManager {
         return this.elements.remove(element);
     }
 
-    private void sort() {
-        this.elements.sort((e1, e2) -> Integer.compare(e1.getPriority(), e2.getPriority()));
-        Collections.reverse(elements); // higher priority first
-
-        // this.elements.forEach(element -> {
-        // System.out.printf("%d\t\t%s\r\n", element.getPriority(),
-        // element.getClass().getSimpleName());
-        // });
-    }
-
     public void draw() {
-        // sort();
-        this.elements.forEach(element -> runAllAnnotationsFor(element, ElementHandler.Event.DRAW));
+        forEach(element -> runAllAnnotationsFor(element, ElementHandler.Event.DRAW));
     }
 
     public void mouseClicked() {
-        this.elements.forEach(element -> runAllAnnotationsFor(element, ElementHandler.Event.MOUSE_CLICKED));
+        forEach(element -> runAllAnnotationsFor(element, ElementHandler.Event.MOUSE_CLICKED));
     }
 }

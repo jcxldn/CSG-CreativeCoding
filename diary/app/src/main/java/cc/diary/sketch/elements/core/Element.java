@@ -13,7 +13,7 @@ import processing.core.PVector;
 @SuperBuilder
 public abstract class Element {
     private @Getter Diary root;
-    private @Builder.Default @Getter int priority = Integer.MAX_VALUE - 2;
+    private @Builder.Default @Getter ElementPriority priority = ElementPriority.LOWEST;
     // default to always displaying
     private @Builder.Default @Getter Supplier<Boolean> visibleWhen = () -> true;
 

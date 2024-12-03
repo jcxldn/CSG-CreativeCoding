@@ -3,6 +3,7 @@ package cc.diary.sketch;
 import cc.diary.sketch.data.Datastore;
 import cc.diary.sketch.elements.Clear;
 import cc.diary.sketch.elements.Stats;
+import cc.diary.sketch.elements.core.ElementPriority;
 import cc.diary.sketch.elements.core.ListenerManager;
 import cc.diary.sketch.screens.YearViewScreen;
 import lombok.Getter;
@@ -37,7 +38,7 @@ public class Diary extends PApplet {
         int statsOffset = 5; // 2 (5 to see bounding box)
         stats = Stats.builder()
                 .root(this)
-                .priority(-1)
+                .priority(ElementPriority.LOWEST)
                 .visibleWhen(() -> displayFrameTimes)
                 .coords(new PVector(width - statsOffset, height - statsOffset))
                 .build();
@@ -45,6 +46,8 @@ public class Diary extends PApplet {
 
         Clear clear = Clear.builder().root(this).build();
         listenerManager.register(clear);
+
+        listenerManager.displayPriorities();
 
     }
 
