@@ -6,6 +6,8 @@ public enum ElementPriority {
      */
     HIGHEST(0),
 
+    SCREEN_ROOT(1),
+
     /**
      * Runs last
      */

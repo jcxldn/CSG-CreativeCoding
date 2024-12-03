@@ -32,7 +32,7 @@ public class Diary extends PApplet {
         data = new Datastore();
         listenerManager = new ListenerManager(this);
 
-        yvs = YearViewScreen.builder().root(this).data(data).year(2024).build();
+        yvs = YearViewScreen.builder().priority(ElementPriority.SCREEN_ROOT).root(this).data(data).year(2024).build();
         listenerManager.register(yvs);
 
         int statsOffset = 5; // 2 (5 to see bounding box)
@@ -44,7 +44,7 @@ public class Diary extends PApplet {
                 .build();
         listenerManager.register(stats);
 
-        Clear clear = Clear.builder().root(this).build();
+        Clear clear = Clear.builder().priority(ElementPriority.HIGHEST).root(this).build();
         listenerManager.register(clear);
 
         listenerManager.displayPriorities();
