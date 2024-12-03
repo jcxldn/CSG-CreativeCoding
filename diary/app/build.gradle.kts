@@ -7,6 +7,7 @@ plugins {
 }
 
 group = "cc.diary"
+var baseName = "jc-cc-diary"
 
 repositories {
     mavenCentral()
@@ -29,6 +30,7 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
+    withSourcesJar()
 }
 
 
@@ -48,9 +50,13 @@ tasks.withType<ShadowJar> {
     archiveClassifier.set("")
 
     // set shadow'd jar filename
-    archiveBaseName.set("jc-cc-diary")
+    archiveBaseName.set(baseName)
     
     // Enable relocation to (pkg).libs
     isEnableRelocation = true
     relocationPrefix = "${project.group}.libs"
+}
+
+tasks.withType<Jar>().named("sourcesJar") {
+    archiveBaseName.set(baseName)
 }
