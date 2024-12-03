@@ -1,15 +1,12 @@
 package cc.diary.sketch.data;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 
 import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.enums.CSVReaderNullFieldIndicator;
 
 import lombok.Getter;
 
@@ -35,6 +32,11 @@ public class CsvProvider<T extends RecordBean> {
 
         this.data = new CsvToBeanBuilder<T>(reader)
                 .withType(cls)
+                // Ensure that any line with empty fields is ignored
+                // (withFieldAsNull, withFilter)
+                .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_SEPARATORS)
+                .withFilter(values -> Arrays.stream(values).allMatch(value -> value != null))
+                // Build and parse
                 .build()
                 .parse();
 
