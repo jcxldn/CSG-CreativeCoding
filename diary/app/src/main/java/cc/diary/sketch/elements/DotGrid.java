@@ -46,14 +46,13 @@ public class DotGrid extends Element {
 
         // Sanity check
         if (x * y < desiredElements) {
-            System.out.printf("[%s]: number of elements for size [%d, %d] (%d) less than desired %d\r\n",
-                    getClass().getName(), x, y, x * y, desiredElements);
+            printf("number of elements for size [%d, %d] (%d) less than desired %d",
+                    x, y, x * y, desiredElements);
             System.exit(3);
         }
-
-        System.out.printf(
-                "[%s]: area [%d, %d] used to create grid of size [%d, %d] (%d elements) to fit requested %d elements\r\n",
-                getClass().getName(), (int) size.x, (int) size.y, x, y, x * y, desiredElements);
+        printf(
+                "area [%d, %d] used to create grid of size [%d, %d] (%d elements) to fit requested %d elements",
+                (int) size.x, (int) size.y, x, y, x * y, desiredElements);
 
         // Set variables
         this.gridSize = new PVector(x, y);
@@ -78,7 +77,7 @@ public class DotGrid extends Element {
     @ElementHandler(Event.SETUP)
     public void setup() {
         if (size == null) {
-            System.out.println("Size not set.");
+            println("Size not set.");
             System.exit(2);
         }
 
@@ -153,7 +152,7 @@ public class DotGrid extends Element {
     public void onClick() {
         forEachElement((index, position, size) -> {
             if (mouseInBounds(dotBounds[index])) {
-                System.out.println(index);
+                println(index);
             }
         });
     }

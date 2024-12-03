@@ -6,7 +6,9 @@ import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-public class Datastore {
+import cc.diary.sketch.logging.StandaloneLogger;
+
+public class Datastore extends StandaloneLogger {
     private static final String HEART_RATE_CSV_FILENAME = "daily_heart_rate_jc.csv";
 
     private CsvProvider<HeartRateRecordBean> hrProvider;
@@ -15,11 +17,11 @@ public class Datastore {
         hrProvider = new CsvProvider<>(HeartRateRecordBean.class, HEART_RATE_CSV_FILENAME);
 
         if (!hrProvider.load()) {
-            System.out.println("Error loading hrProvider, exiting...");
+            getLogger().println("Error loading hrProvider, exiting...");
             System.exit(1);
         }
 
-        System.out.println("Loaded data!");
+        getLogger().println("Loaded data!");
     }
 
     // Forgive me lord for I have sinned in the name of IntelliSense

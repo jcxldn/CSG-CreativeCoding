@@ -6,9 +6,10 @@ import java.util.PriorityQueue;
 import java.util.function.Consumer;
 
 import cc.diary.sketch.Diary;
+import cc.diary.sketch.logging.StandaloneLogger;
 import cc.diary.sketch.util.field.Field;
 
-public class ListenerManager {
+public class ListenerManager extends StandaloneLogger {
     private PriorityQueue<Element> elements;
 
     public ListenerManager(Diary root) {
@@ -44,7 +45,7 @@ public class ListenerManager {
         if (Diary.class.isInstance(listener.getRoot())) {
             action.run();
         } else {
-            System.out.printf("[%s]: Root not set, did you call setRoot()?", listener.getClass().getName());
+            getLogger().printf("Root not set, did you call setRoot()? (for class %s)", listener.getClass().getName());
         }
     }
 
@@ -72,7 +73,7 @@ public class ListenerManager {
             ElementPriority priority = element.getPriority(); // get priority enum
 
             // display values
-            System.out.printf("%s\t(order #%d)\t%s\t(%d)\r\n",
+            getLogger().printf("%s\t(order #%d)\t%s\t(%d)",
                     String.format(
                             "%20s",
                             element.getClass().getSimpleName()),

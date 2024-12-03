@@ -31,8 +31,7 @@ public class YearViewScreen extends Element {
                 // Get all (chosen year) data
                 hrChosenYear = data.hrFilter((item) -> item.getLocalDateTime().getYear() == year);
 
-                System.out.printf("[%s]: Using year %d (%d entries)\r\n", getClass().getName(), year,
-                                hrChosenYear.size());
+                printf("Using year %d (%d entries)", year, hrChosenYear.size());
 
                 yearText = Text.builder()
                                 .root(getRoot())
@@ -53,7 +52,7 @@ public class YearViewScreen extends Element {
 
                 getRoot().getListenerManager().register(dots);
 
-                System.out.printf("[%s]: created DotGrid of %fx%f (size %d)\r\n", this.getClass().getName(),
+                printf("created DotGrid of %fx%f (size %d)",
                                 dots.getGridSize().x,
                                 dots.getGridSize().y,
                                 dots.getElementSize());

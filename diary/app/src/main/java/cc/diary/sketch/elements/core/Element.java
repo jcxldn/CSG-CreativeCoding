@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import cc.diary.sketch.Diary;
 import cc.diary.sketch.collision.BoundingBox;
+import cc.diary.sketch.logging.InstanceLogger;
 import cc.diary.sketch.util.Color;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 import processing.core.PVector;
 
 @SuperBuilder
-public abstract class Element {
+public abstract class Element extends InstanceLogger {
     private @Getter Diary root;
     private @Builder.Default @Getter ElementPriority priority = ElementPriority.LOWEST;
     // default to always displaying
