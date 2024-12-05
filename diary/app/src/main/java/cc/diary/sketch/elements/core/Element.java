@@ -1,5 +1,6 @@
 package cc.diary.sketch.elements.core;
 
+import java.util.ArrayList;
 import java.util.function.Supplier;
 
 import cc.diary.sketch.Diary;
@@ -17,6 +18,8 @@ public abstract class Element extends InstanceLogger {
     private @Builder.Default @Getter ElementPriority priority = ElementPriority.LOWEST;
     // default to always displaying
     private @Builder.Default @Getter Supplier<Boolean> visibleWhen = () -> true;
+
+    private @Builder.Default ArrayList<Element> priorities = new ArrayList<>();
 
     // #region Utility functions
 

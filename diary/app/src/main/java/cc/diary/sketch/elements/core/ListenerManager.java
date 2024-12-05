@@ -102,6 +102,10 @@ public class ListenerManager extends StandaloneLogger {
         forEach(element -> runAllAnnotationsFor(element, ElementHandler.Event.DRAW));
     }
 
+    public void keyPressed() {
+        forEach(element -> runAllAnnotationsFor(element, ElementHandler.Event.KEY_PRESSED));
+    }
+
     public void mouseClicked() {
         forEach(element -> runAllAnnotationsFor(element, ElementHandler.Event.MOUSE_CLICKED));
     }

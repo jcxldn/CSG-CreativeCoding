@@ -9,6 +9,7 @@ import cc.diary.sketch.collision.RectangularBoundingBox;
 import cc.diary.sketch.elements.core.Element;
 import cc.diary.sketch.elements.core.ElementHandler;
 import cc.diary.sketch.elements.core.ElementHandler.Event;
+import cc.diary.sketch.screens.ActiveScreen;
 import cc.diary.sketch.util.Color;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
@@ -153,6 +154,7 @@ public class DotGrid extends Element {
         forEachElement((index, position, size) -> {
             if (mouseInBounds(dotBounds[index])) {
                 println(index);
+                getRoot().setActiveScreen(ActiveScreen.DAY_VIEW_SCREEN);
             }
         });
     }

@@ -5,8 +5,10 @@ import cc.diary.sketch.elements.Clear;
 import cc.diary.sketch.elements.Stats;
 import cc.diary.sketch.elements.core.ElementPriority;
 import cc.diary.sketch.elements.core.ListenerManager;
+import cc.diary.sketch.screens.ActiveScreen;
 import cc.diary.sketch.screens.YearViewScreen;
 import lombok.Getter;
+import lombok.Setter;
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -15,6 +17,8 @@ public class Diary extends PApplet {
     // default false
     private @Getter boolean displayBoundingBoxes;
     private boolean displayFrameTimes;
+
+    private @Getter @Setter ActiveScreen activeScreen = ActiveScreen.YEAR_VIEW_SCREEN;
 
     private Datastore data;
     private @Getter ListenerManager listenerManager;
@@ -32,7 +36,15 @@ public class Diary extends PApplet {
         data = new Datastore();
         listenerManager = new ListenerManager(this);
 
-        yvs = YearViewScreen.builder().priority(ElementPriority.SCREEN_ROOT).root(this).data(data).year(2024).build();
+        // Register screens
+
+        yvs = YearViewScreen.builder()
+                .priority(ElementPriority.SCREEN_ROOT)
+                .visibleWhen(() -> getActiveScreen() == ActiveScreen.YEAR_VIEW_SCREEN)
+                .root(this)
+                .data(data)
+                .year(2024)
+                .build();
         listenerManager.register(yvs);
 
         int statsOffset = 5; // 2 (5 to see bounding box)
@@ -61,6 +73,8 @@ public class Diary extends PApplet {
         } else if (key == 'f') {
             displayFrameTimes = !displayFrameTimes;
         }
+
+        listenerManager.keyPressed();
     }
 
     public void mouseClicked() {

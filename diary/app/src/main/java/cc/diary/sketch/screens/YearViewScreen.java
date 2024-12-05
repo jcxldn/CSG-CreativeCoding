@@ -1,6 +1,5 @@
 package cc.diary.sketch.screens;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import cc.diary.sketch.data.Datastore;
@@ -11,6 +10,7 @@ import cc.diary.sketch.elements.core.Element;
 import cc.diary.sketch.elements.core.ElementHandler;
 import cc.diary.sketch.elements.core.ElementHandler.Event;
 import lombok.experimental.SuperBuilder;
+import processing.core.PConstants;
 import processing.core.PVector;
 
 @SuperBuilder
@@ -57,5 +57,27 @@ public class YearViewScreen extends Element {
                                 dots.getGridSize().y,
                                 dots.getElementSize());
 
+        }
+
+        private void unregister() {
+                getRoot().getListenerManager().unregister(yearText);
+                getRoot().getListenerManager().unregister(dots);
+        }
+
+        @ElementHandler(Event.KEY_PRESSED)
+        public void onKeyPressed() {
+                if (getRoot().key == PConstants.CODED) {
+                        int keyCode = getRoot().keyCode;
+
+                        if (keyCode == PConstants.LEFT) {
+                                year--;
+                                unregister();
+                                setup();
+                        } else if (keyCode == PConstants.RIGHT) {
+                                year++;
+                                unregister();
+                                setup();
+                        }
+                }
         }
 }

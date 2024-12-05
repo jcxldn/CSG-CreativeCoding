@@ -12,6 +12,7 @@ public @interface ElementHandler {
         NONE,
         SETUP,
         DRAW,
+        KEY_PRESSED,
         MOUSE_CLICKED
     }
 
