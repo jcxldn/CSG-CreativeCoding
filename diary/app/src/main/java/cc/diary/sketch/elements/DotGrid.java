@@ -33,8 +33,7 @@ public class DotGrid extends Element {
     private RectangularBoundingBox boundingBox;
 
     // caching
-    private BoundedText[] textArr;
-    private CircularBoundingBox[] dotBounds;
+    private Dot[] dots;
 
     private static final Color DOT_COLOR = new Color(255, 128, 128);
     private static final Color DOT_COLOR_ACTIVE = new Color(255, 32, 32);
@@ -94,11 +93,19 @@ public class DotGrid extends Element {
         // Size was set
         determineSize();
 
-        textArr = new BoundedText[getDesiredElements()];
-        dotBounds = new CircularBoundingBox[getDesiredElements()];
+        dots = new Dot[getDesiredElements()];
 
         forEachElement((index, position, size) -> {
-            dotBounds[index] = new CircularBoundingBox(new PVector(position.x, position.y), size);
+            CircularBoundingBox bounds = new CircularBoundingBox(new PVector(position.x, position.y), size);
+            dots[index] = Dot.builder()
+                    .root(getRoot())
+                    .bounds(bounds)
+                    .position(position)
+                    .size(size)
+                    .elementSize(getElementSize())
+                    .record(elements.get(index))
+                    .build();
+            dots[index].setup();
         });
 
         // Create bounding box
@@ -112,55 +119,14 @@ public class DotGrid extends Element {
         boundingBox.drawIfEnabled(this);
 
         forEachElement((index, position, size) -> {
-            // Darken circle (switch to "active color") if under mouse
-            Color color = (dotBounds[index].contains(new PVector(getRoot().mouseX, getRoot().mouseY)))
-                    ? DOT_COLOR_ACTIVE
-                    : DOT_COLOR;
-
-            // Draw circle with selected color
-            withFill(true, color, () -> {
-                getRoot().circle(position.x, position.y, size);
-            });
-
-            dotBounds[index].drawIfEnabled(this);
-
-            // Get the largest (square) bounding box that will fit inside the circle.
-            int rectSize = (int) Math.floor((getElementSize() / 2) * Math.sqrt(2));
-            // top left coords of rect
-            PVector rectCoordsVector = new PVector(
-                    position.x - (rectSize / 2),
-                    position.y - (rectSize / 2));
-            PVector rectSizeVector = new PVector(rectSize, rectSize);
-
-            int dayAverage = elements.get(index).getHeartRateAvg();
-
-            // if boundedText entry not cached, create and store in "cache" array
-            if (textArr[index] == null) {
-                textArr[index] = BoundedText.builder()
-                        .root(getRoot())
-                        .text(dayAverage)
-                        .centred(true)
-                        .maxBounds(rectSizeVector)
-                        .coords(rectCoordsVector)
-                        .build();
-            }
-
-            // Draw from cache array
-            withFill(true, new Color(0, 0, 0), () -> {
-                textArr[index].draw();
-            });
-
-            // Rect bounding box for testing
-            // RectangularBoundingBox textBounds = new
-            // RectangularBoundingBox(rectCoordsVector, rectSizeVector);
-            // textBounds.draw(this);
+            dots[index].draw();
         });
     }
 
     @ElementHandler(Event.MOUSE_CLICKED)
     public void onClick() {
         forEachElement((index, position, size) -> {
-            if (mouseInBounds(dotBounds[index])) {
+            if (mouseInBounds(dots[index].getBounds())) {
                 println(index);
                 getRoot().setActiveScreen(ActiveScreen.DAY_VIEW_SCREEN);
             }
