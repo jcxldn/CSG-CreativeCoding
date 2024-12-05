@@ -52,7 +52,7 @@ public class YearViewScreen extends Element {
                                 .root(getRoot())
                                 .coords(new PVector(0, 24))
                                 .size(new PVector(getRoot().width, getRoot().height - textSize))
-                                .desiredElements(hrChosenYear.size())
+                                .elements(hrChosenYear)
                                 .build();
 
                 getRoot().getListenerManager().register(dots);
@@ -91,7 +91,7 @@ public class YearViewScreen extends Element {
                                                 .build();
 
                                 dots = dots.toBuilder()
-                                                .desiredElements(hrChosenYear.size())
+                                                .elements(hrChosenYear)
                                                 .build();
 
                                 getRoot().getListenerManager().register(yearText);

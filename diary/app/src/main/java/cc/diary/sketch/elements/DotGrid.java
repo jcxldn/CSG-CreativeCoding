@@ -1,11 +1,13 @@
 package cc.diary.sketch.elements;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 
 import org.apache.commons.lang3.function.TriConsumer;
 
 import cc.diary.sketch.collision.CircularBoundingBox;
 import cc.diary.sketch.collision.RectangularBoundingBox;
+import cc.diary.sketch.data.HeartRateRecordBean;
 import cc.diary.sketch.elements.core.Element;
 import cc.diary.sketch.elements.core.ElementHandler;
 import cc.diary.sketch.elements.core.ElementHandler.Event;
@@ -21,7 +23,7 @@ public class DotGrid extends Element {
     // Set via superBuilder
     private @Getter PVector coords;
     private @Getter PVector size;
-    private @Getter int desiredElements;
+    private @Getter List<HeartRateRecordBean> elements;
 
     // Set in setup
 
@@ -34,26 +36,33 @@ public class DotGrid extends Element {
     private BoundedText[] textArr;
     private CircularBoundingBox[] dotBounds;
 
+    private static final Color DOT_COLOR = new Color(255, 128, 128);
+    private static final Color DOT_COLOR_ACTIVE = new Color(255, 32, 32);
+
+    private int getDesiredElements() {
+        return elements.size();
+    }
+
     // Determine grid size given bounds and desired elements
     private void determineSize() {
         float xToYRatio = Math.max(size.x, size.y) / Math.min(size.x, size.y);
 
-        int x = (int) Math.ceil(Math.sqrt(desiredElements) * xToYRatio);
+        int x = (int) Math.ceil(Math.sqrt(getDesiredElements()) * xToYRatio);
         // round up integer division <https://stackoverflow.com/a/17149572>
-        int y = (int) Math.ceil((double) desiredElements / x);
+        int y = (int) Math.ceil((double) getDesiredElements() / x);
 
         // Determine size of elements (use Math.min so we can't go off-screen)
         double elementSize = Math.min((size.x / x), (size.y / y));
 
         // Sanity check
-        if (x * y < desiredElements) {
+        if (x * y < getDesiredElements()) {
             printf("number of elements for size [%d, %d] (%d) less than desired %d",
-                    x, y, x * y, desiredElements);
+                    x, y, x * y, getDesiredElements());
             System.exit(3);
         }
         printf(
                 "area [%d, %d] used to create grid of size [%d, %d] (%d elements) to fit requested %d elements",
-                (int) size.x, (int) size.y, x, y, x * y, desiredElements);
+                (int) size.x, (int) size.y, x, y, x * y, getDesiredElements());
 
         // Set variables
         this.gridSize = new PVector(x, y);
@@ -62,7 +71,7 @@ public class DotGrid extends Element {
 
     private void forEachElement(TriConsumer<Integer, PVector, Integer> action) {
         int xSize = (int) getGridSize().x;
-        for (int index = 0; index < desiredElements; index++) {
+        for (int index = 0; index < getDesiredElements(); index++) {
             // Determine x, y position in grid
             int xIndex = index % xSize;
             int yIndex = index / xSize;
@@ -85,8 +94,8 @@ public class DotGrid extends Element {
         // Size was set
         determineSize();
 
-        textArr = new BoundedText[desiredElements];
-        dotBounds = new CircularBoundingBox[desiredElements];
+        textArr = new BoundedText[getDesiredElements()];
+        dotBounds = new CircularBoundingBox[getDesiredElements()];
 
         forEachElement((index, position, size) -> {
             dotBounds[index] = new CircularBoundingBox(new PVector(position.x, position.y), size);
@@ -103,13 +112,10 @@ public class DotGrid extends Element {
         boundingBox.drawIfEnabled(this);
 
         forEachElement((index, position, size) -> {
-            // Darken circle if under mouse
-            Color color;
-            if (dotBounds[index].contains(new PVector(getRoot().mouseX, getRoot().mouseY))) {
-                color = new Color(0, (255 / 4) * 3, 0);
-            } else {
-                color = new Color(0, 255, 0);
-            }
+            // Darken circle (switch to "active color") if under mouse
+            Color color = (dotBounds[index].contains(new PVector(getRoot().mouseX, getRoot().mouseY)))
+                    ? DOT_COLOR_ACTIVE
+                    : DOT_COLOR;
 
             // Draw circle with selected color
             withFill(true, color, () -> {
@@ -126,11 +132,13 @@ public class DotGrid extends Element {
                     position.y - (rectSize / 2));
             PVector rectSizeVector = new PVector(rectSize, rectSize);
 
+            int dayAverage = elements.get(index).getHeartRateAvg();
+
             // if boundedText entry not cached, create and store in "cache" array
             if (textArr[index] == null) {
                 textArr[index] = BoundedText.builder()
                         .root(getRoot())
-                        .text("123")
+                        .text(dayAverage)
                         .centred(true)
                         .maxBounds(rectSizeVector)
                         .coords(rectCoordsVector)
