@@ -19,7 +19,9 @@ public class BoundedText extends AbstractText {
 
     @Override
     protected PVector getSize() {
-        if (text == cachedText) {
+        // If we don't do toString here and pass eg. ints the comparison will always
+        // fail, resulting in abysmal performance as we recalc each frame.
+        if (cachedText != null && text.toString().equals(cachedText.toString())) {
             // Text has not changed since we last calculated, return cached value
             return cachedSize;
         } else {
