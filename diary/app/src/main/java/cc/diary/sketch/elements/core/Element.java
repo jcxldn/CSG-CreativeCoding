@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import processing.core.PVector;
 
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 public abstract class Element extends InstanceLogger {
     private @Getter Diary root;
     private @Builder.Default @Getter ElementPriority priority = ElementPriority.LOWEST;

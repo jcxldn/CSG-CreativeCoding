@@ -17,7 +17,7 @@ import processing.core.PVector;
  * Text (with an optional BoundingBox)
  */
 // TODO: make Text part of AbstractText
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 public class Text extends Element {
     // Set via superBuilder
     private Serializable text;

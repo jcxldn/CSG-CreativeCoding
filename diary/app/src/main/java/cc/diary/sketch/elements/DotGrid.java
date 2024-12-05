@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 import processing.core.PApplet;
 import processing.core.PVector;
 
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 public class DotGrid extends Element {
     // Set via superBuilder
     private @Getter PVector coords;
