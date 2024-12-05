@@ -20,7 +20,13 @@ public class Stats extends Element {
         withFill(true, new Color(0, 0, 0), () -> {
             Text bt = Text.builder()
                     .root(getRoot())
-                    .text(String.format("%d (%.0f FPS)", getRoot().frameCount, getRoot().frameRate))
+                    .text(
+                            String.format("%d/%d elements enabled | %d logger(s) | frame %d (%.0f FPS)",
+                                    getRoot().getListenerManager().getSizeEnabled(),
+                                    getRoot().getListenerManager().getSizeAll(),
+                                    getLoggersSize(),
+                                    getRoot().frameCount,
+                                    getRoot().frameRate))
                     .textSize(16)
                     .xAlign(PConstants.RIGHT)
                     .yAlign(PConstants.BOTTOM)

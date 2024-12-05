@@ -63,6 +63,20 @@ public class ListenerManager extends StandaloneLogger {
         }
     }
 
+    public int getSizeAll() {
+        return elements.size();
+    }
+
+    public int getSizeEnabled() {
+        int total = 0;
+        for (Element e : elements) {
+            if (e.getVisibleWhen().get())
+                total++;
+        }
+
+        return total;
+    }
+
     public void displayPriorities() {
         // use a field to increment integer value inside consumer action (a lambda?)
         Field<Integer> index = new Field<Integer>();

@@ -83,6 +83,10 @@ public abstract class InstanceLogger {
         return Collections.singletonMap("unknown", "unknown");
     }
 
+    public int getLoggersSize() {
+        return loggers.size();
+    }
+
     public void println(Level level, Serializable message) {
         // Determine caller
         Map<String, String> caller = determineCalling();
