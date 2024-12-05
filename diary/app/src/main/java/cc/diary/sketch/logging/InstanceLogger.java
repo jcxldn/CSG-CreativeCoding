@@ -3,6 +3,7 @@ package cc.diary.sketch.logging;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.ConsoleHandler;
@@ -10,8 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder(toBuilder = true)
@@ -28,8 +27,7 @@ public abstract class InstanceLogger {
 
     private static final String NEWLINE = "\r\n";
 
-    @Getter(value = AccessLevel.PRIVATE, lazy = true)
-    private final Logger logger = createLogger();
+    private static HashMap<String, Logger> loggers = new HashMap<String, Logger>();
 
     private final String[] ignoredClassNames = {
             StackTraceElement.class.getName(),
@@ -37,7 +35,17 @@ public abstract class InstanceLogger {
             InstanceLogger.class.getName()
     };
 
-    public Logger createLogger() {
+    private Logger getLogger() {
+        String key = this.getClass().getName();
+
+        if (!loggers.containsKey(key)) {
+            loggers.put(key, createLogger());
+        }
+
+        return loggers.get(key);
+    }
+
+    private Logger createLogger() {
         Logger logger = Logger.getLogger(this.getClass().getSimpleName());
         ConsoleHandler handler = new ConsoleHandler();
         handler.setFormatter(new InstanceLoggerFormatter());
